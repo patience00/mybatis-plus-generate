@@ -15,6 +15,12 @@ public class CodeGenerator {
 
 
     public static void main(String[] args) {
+        String mysqlHost = System.getenv("MYSQL-HOST");
+        String mysqlPort = System.getenv("MYSQL-PORT");
+        String mysqlPass = System.getenv("MYSQL-PASS");
+        String mysqlUser = System.getenv("MYSQL-USER");
+        String database = System.getenv("DATABASE");
+        String module = System.getenv("MODULE");
         // 代码生成器
         AutoGenerator mpg = new AutoGenerator();
 
@@ -25,6 +31,7 @@ public class CodeGenerator {
         gc.setAuthor("107");
         gc.setOpen(true);
         gc.setIdType(IdType.AUTO);
+        gc.setSwagger2(true);
         gc.setBaseColumnList(true);
         gc.setBaseResultMap(true);
         gc.setMapperName("%sMapper");
@@ -38,18 +45,21 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("");
+        dsc.setUrl("jdbc:mysql://" + mysqlHost + ":" + mysqlPort + "/" + database + "?useUnicode=true&characterEncoding=utf-8&useLegacyDatetimeCode=false" +
+                "&serverTimezone=Asia/Shanghai");
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("");
-        dsc.setPassword("");
+        dsc.setUsername(mysqlUser);
+        dsc.setPassword(mysqlPass);
         mpg.setDataSource(dsc);
 
         // 包配置
-        PackageConfig pc = new PackageConfig();
-        pc.setModuleName("");
-        pc.setParent("");
-        pc.setEntity("");
+        final PackageConfig pc = new PackageConfig();
+        pc.setModuleName(module);
+        pc.setEntity("entity.po");
+        pc.setMapper("mapper");
+
+        pc.setParent("com.linchtech");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -127,8 +137,9 @@ public class CodeGenerator {
         // 写于父类中的公共字段
         // strategy.setSuperEntityColumns("id");
         // 需要生成的表名
-        strategy.setInclude("");
+        strategy.setInclude("plate_no");
         strategy.setControllerMappingHyphenStyle(true);
+        strategy.setEntitySerialVersionUID(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         // strategy.setEntityTableFieldAnnotationEnable(true);
         mpg.setStrategy(strategy);
