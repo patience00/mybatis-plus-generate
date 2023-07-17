@@ -59,7 +59,7 @@ public class CodeGenerator {
         pc.setEntity("entity.po");
         pc.setMapper("mapper");
 
-        pc.setParent("com.linchtech");
+        pc.setParent("com.linchtech.gjzz");
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -131,16 +131,20 @@ public class CodeGenerator {
         // strategy.setSuperEntityClass("你自己的父类实体,没有就不用设置!");
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        strategy.setLogicDeleteFieldName("is_active");
+        strategy.setLogicDeleteFieldName("delete_flag");
         // 公共父类
         // strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
         // 写于父类中的公共字段
         // strategy.setSuperEntityColumns("id");
         // 需要生成的表名
-        strategy.setInclude("plate_no");
+        // strategy.setInclude("plate_no");
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setEntitySerialVersionUID(true);
-        strategy.setTablePrefix(pc.getModuleName() + "_");
+        strategy.setVersionFieldName("version");
+        strategy.setLogicDeleteFieldName("delete_flag");
+        strategy.setSuperEntityClass(BasePO.class);
+        strategy.setSuperEntityColumns("id","createTime","updateTime","deleteFlag","version");
+        // strategy.setTablePrefix(pc.getModuleName() + "_");
         // strategy.setEntityTableFieldAnnotationEnable(true);
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
